@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OpenAI API Request</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="grid grid-cols-2 h-screen">
+        <div class="bg-red-600 p-24">
+            <input type="text" id="prompt" placeholder="Enter your prompt here">
+            <button onclick="sendRequest()">Send Request</button>
+        </div>
+
+        <div class="bg-cyan-600 p-24">
+            <button onclick=""></button>
+            <iframe id="myIframe" width="600" height="400" frameborder="0"></iframe>
+        </div>
+    </div>
+    <script>
+
+        async function sendRequest() {
+
+            const prompt = document.getElementById("prompt").value;
+
+            try {
+                const apiKey = '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';
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`, // Replace with your OpenAI API key
+                    },
+                    body: JSON.stringify({
+                        model: 'ft:gpt-3.5-turbo-0613:personal::8fhfQQfB',
+                        messages: [
+                            { "role": "system", "content": "Marv is a smart chatbot generates html tailwind components." },
+                            { "role": "user", "content": `${prompt}  [response should be in html and always give full response]` }
+                        ]
+                    }),
+                });
+
+
+                const jsonResponse = await response.json();
+                var text = jsonResponse.choices[0].message.content;
+                console.log(text);
+
+                var iframe = document.getElementById('myIframe');
+                text = `<head><script src="https://cdn.tailwindcss.com"><\/script></head>` + text;
+
+                // code generated
+                iframe.srcdoc = text;
+
+
+            } catch (error) {
+                console.error("Error sending request:", error);
+                document.getElementById("response").innerHTML = "Error: Could not process request.";
+            }
+        }
+
+    </script>
+</body>
+
+</html>

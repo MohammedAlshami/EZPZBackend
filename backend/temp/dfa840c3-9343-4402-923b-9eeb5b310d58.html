@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Boxes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .box-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 999;
+            /* Ensure boxes are on top */
+        }
+
+        .box {
+            width: 150px;
+            height: 100px;
+            background-color: lightblue;
+            margin: 10px;
+            cursor: grab;
+        }
+
+        .paragraph {
+            margin: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box-container">
+        <div class="box" id="box1" draggable="true" ondragstart="drag(event)" ondrop="drop(event)"
+            ondragover="allowDrop(event)">
+            Box 1
+        </div>
+        <div class="box" id="box2" draggable="true" ondragstart="drag(event)" ondrop="drop(event)"
+            ondragover="allowDrop(event)">
+            Box 2
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-24 pl-24">
+        <div class="paragraph mx-24 h-fit overflow-scroll" id="paragraph1">
+            Paragraph 1
+        </div>
+        <div class="paragraph mx-24 h-fit overflow-scroll" id="paragraph2">
+            Paragraph 2
+        </div>
+    </div>
+    <script>
+        function makeAllEditable(containerId) {
+            var container = document.getElementById(containerId);
+            makeEditableRecursive(container);
+        }
+
+        function makeEditableRecursive(element) {
+            element.contentEditable = true;
+
+            var childNodes = element.childNodes;
+            for (var i = 0; i < childNodes.length; i++) {
+                var childNode = childNodes[i];
+                if (childNode.nodeType === 1) { // Check if it's an element node
+                    makeEditableRecursive(childNode);
+                }
+            }
+        }
+        makeAllEditable("paragraph1");
+        makeAllEditable("paragraph2");
+
+    </script>
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
+            var dropTarget = event.target;
+
+            // Swap box positions
+            var temp = draggedElement.nextElementSibling;
+            draggedElement.parentNode.insertBefore(draggedElement, dropTarget);
+            dropTarget.parentNode.insertBefore(dropTarget, temp);
+
+            // Swap paragraph content
+            var paragraph1 = document.getElementById('paragraph1');
+            var paragraph2 = document.getElementById('paragraph2');
+            var tempContent = paragraph1.innerHTML;
+            paragraph1.innerHTML = paragraph2.innerHTML;
+            paragraph2.innerHTML = tempContent;
+        }
+    </script>
+
+</body>
+
+</html>
