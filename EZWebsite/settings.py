@@ -129,6 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://orca-app-779h3.ondigitalocean.app'
 ]
 
 X_FRAME_OPTIONS = 'ALLOWALL'
