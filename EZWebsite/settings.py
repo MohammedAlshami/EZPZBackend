@@ -132,6 +132,9 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT= os.path.join(BASE_DIR, 'staticfiles')
